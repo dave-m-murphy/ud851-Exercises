@@ -29,6 +29,11 @@ public abstract class AppDatabase extends RoomDatabase {
         return sInstance;
     }
 
+    // Room auto-generates all nec code for this method. ie. Room subclasses our abstract class
     public abstract TaskDao taskDao();
+
+    // could pre-load db with TaskEntries object also. Uses RoomDatabase.Callback class to do the
+    // inserting with AsyncTask
+    // see https://www.youtube.com/watch?v=HhmA9S53XV8&list=TLPQMDYxMjIwMTloX7NKnRgpoQ&index=2
 
 }

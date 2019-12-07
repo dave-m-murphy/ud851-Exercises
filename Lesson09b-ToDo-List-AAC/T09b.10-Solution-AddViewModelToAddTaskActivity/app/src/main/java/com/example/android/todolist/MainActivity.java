@@ -40,24 +40,18 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
 public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemClickListener {
 
-    // Constant for logging
     private static final String TAG = MainActivity.class.getSimpleName();
-    // Member variables for the adapter and RecyclerView
-    private RecyclerView mRecyclerView;
     private TaskAdapter mAdapter;
 
-    private AppDatabase mDb;
+    //private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set the RecyclerView to its corresponding view
-        mRecyclerView = findViewById(R.id.recyclerViewTasks);
-
-        // Set the layout for the RecyclerView to be a linear layout, which measures and
-        // positions items within a RecyclerView into a linear list
+        // Member variables for the adapter and RecyclerView
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerViewTasks);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the adapter and attach it to the RecyclerView
@@ -72,24 +66,18 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
          An ItemTouchHelper enables touch behavior (like swipe and move) on each ViewHolder,
          and uses callbacks to signal when a user is performing these actions.
          */
+        final MainViewModel viewModelForSwipe = ViewModelProviders.of(this).get(MainViewModel.class);
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
 
-            // Called when a user swipes left or right on a ViewHolder
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                // Here is where you'll implement swipe to delete
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        int position = viewHolder.getAdapterPosition();
-                        List<TaskEntry> tasks = mAdapter.getTasks();
-                        mDb.taskDao().deleteTask(tasks.get(position));
-                    }
-                });
+                int position = viewHolder.getAdapterPosition();
+                List<TaskEntry> tasks = mAdapter.getTasks();
+                viewModelForSwipe.delete(tasks.get(position));
             }
         }).attachToRecyclerView(mRecyclerView);
 
@@ -99,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
          to launch the AddTaskActivity.
          */
         FloatingActionButton fabButton = findViewById(R.id.fab);
-
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             }
         });
 
-        mDb = AppDatabase.getInstance(getApplicationContext());
+        //mDb = AppDatabase.getInstance(getApplicationContext());
         setupViewModel();
     }
 
