@@ -16,14 +16,16 @@ public class TasksRepository {
     private LiveData<TaskEntry> task;
     private LiveData<List<TaskEntry>> allTasks;
 
+    // Not sure what implications of offering >1 constructor for this repo?
+
     public TasksRepository(Application application) {
         AppDatabase database = AppDatabase.getInstance(application);
         taskDao = database.taskDao();
         allTasks = taskDao.loadAllTasks();
     }
 
-    public TasksRepository(Context context, int id) {
-        AppDatabase database = AppDatabase.getInstance(context);
+    // separate constructor for AddTaskActivity
+    public TasksRepository(AppDatabase database, int id) {
         taskDao = database.taskDao();
         task = taskDao.loadTaskById(id);
         allTasks = taskDao.loadAllTasks();

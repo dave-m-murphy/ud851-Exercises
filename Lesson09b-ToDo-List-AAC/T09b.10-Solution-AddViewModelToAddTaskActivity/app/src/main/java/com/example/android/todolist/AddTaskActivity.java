@@ -77,9 +77,9 @@ public class AddTaskActivity extends AppCompatActivity {
                 mTaskId = intent.getIntExtra(EXTRA_TASK_ID, DEFAULT_TASK_ID);
 
                 // Declare a AddTaskViewModelFactory using mDb and mTaskId
-                AddTaskViewModelFactoryRepo factory = new AddTaskViewModelFactoryRepo(mDb, mTaskId);
+                AddTaskViewModelFactory factory = new AddTaskViewModelFactory(mDb, mTaskId);
                 // Declare a AddTaskViewModel variable and initialize it by calling ViewModelProviders.of
-                // for that use the factory created above AddTaskViewModel
+                // with the factory created earlier
                 final AddTaskViewModel viewModel
                         = ViewModelProviders.of(this, factory).get(AddTaskViewModel.class);
 
